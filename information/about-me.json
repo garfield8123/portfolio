@@ -1,0 +1,19 @@
+{
+"aboutMe":{
+    "Name":"Garfield Yang", 
+    "Major":"Technology Information Management B.S.",
+    "School":"University of California Santa Cruz",
+    "Skills":{
+        "HTML":"90", 
+        "Python":"95"
+    },
+    "Certifications":{
+        "Comptia Network+":"Date expires"
+    },
+    "PositionTitle":"Information Security Analyst"
+    },
+"ContactInfo":{
+    "email":"orangegarfieldspam01@gmail.com",
+    "Github":"https://github.com/garfield8123"
+    }
+}

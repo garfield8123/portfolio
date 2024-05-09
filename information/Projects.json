@@ -1,0 +1,16 @@
+{
+"Projects":[{
+    "Name":"Advanced Fernet Key Encrpytion",
+    "Link":"https://github.com",
+    "information":"Utilizes Fernet encrpytion, but injects the datetime of the fernet encryption randomly within the plain text data",
+    "tag":["Encryption", "Assymetric", "Fernet", "Python"]
+},
+{
+    "Name":"Custom NAT Network",
+    "Link":"",
+    "information":"NAT network for the raspberry pi that utilizes wlan0 as it's external facing ip interface and eth0 as its internal ip interface.",
+    "tag":["Network", "Linux", "Raspbian", "IOT-device", "NAT"]
+}
+
+]
+}
