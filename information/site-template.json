@@ -1,0 +1,26 @@
+{
+    "Certifications start":
+    "",
+    "Certifications":
+    "<p>%name</p> <p>%expire</p> <br>",
+    "Certifications end":
+    "",
+    "Skills start":
+    "",
+    "Skills":
+    "<p>%name</p> <progress value=%value max='100'></progress> %value <br>",
+    "Skills end":
+    "",
+    "Project start":
+    "<div class='row'>",
+    "Project":
+    "<div class='col-md-4'> <div class='card'> <!-- <div class='card-header'>%title</div> <img src='' class='card-img-top' alt=''> --> <div class='card-body'><h5 class='card-title'>%title</h5> <p class='card-text'>%info</p>%tag <a href='%link' class='btn btn-primary'>See the Project</a></div></div></div>",
+    "Project end":
+    "</div>",
+    "Tag start": 
+    "",
+    "Tag":
+    "<a href='./SearchProject/%name' class='btn-link'> %name </a>",
+    "Tag end":
+    "<br>"
+}

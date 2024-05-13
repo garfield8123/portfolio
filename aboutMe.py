@@ -8,6 +8,9 @@ def getJsonInformation(Version = ""):
     if "me" in Version.lower():
         with open("./information/about-me.json") as aboutMe:
             loadedJson = json.load(aboutMe)
+    elif "site" in Version.lower():
+        with open("./information/site-template.json") as siteTemplate:
+            loadedJson = json.load(siteTemplate)
     else:
         with open("./information/credentials.json") as Credentials:
             loadedJson = json.load(Credentials)
@@ -15,19 +18,25 @@ def getJsonInformation(Version = ""):
 
 def makeInformationPretty():
     aboutMeJson = getJsonInformation("me")
+    siteTemplateJson = getJsonInformation("site")
     certification_dict = aboutMeJson.get("aboutMe").get("Certifications")
     skills_dict = aboutMeJson.get("aboutMe").get("Skills")
-    certification_result = ""
-    for key, values in certification_dict.items():
-        certification_result = certification_result + ('''
-        <p>%s</p> <p>%s</p> <br>
-        ''' %(key, values))
 
-    skills_result = ""
+    certificateStyle = siteTemplateJson.get("Certifications")
+    skillStyle = siteTemplateJson.get("Skills")
+    certification_result = siteTemplateJson.get("Certifications start")
+    for key, values in certification_dict.items():
+        certificateStyle = certificateStyle.replace("%name", key)
+        certificateStyle = certificateStyle.replace('%expire', values)
+        certification_result = certification_result + certificateStyle
+
+    skills_result = siteTemplateJson.get("Skills start")
     for key, values in skills_dict.items():
-        skills_result = skills_result + ('''
-        <p>%s</p> <progress value=%s max="100"></progress> <br>
-        ''' %(key, values))
+        skillStyle = skillStyle.replace("%name", key)
+        skillStyle = skillStyle.replace("%value",values)
+        skills_result = skills_result + skillStyle
+    certification_result = certification_result + siteTemplateJson.get("Certifications end")
+    skills_result = skills_result + siteTemplateJson.get("Skills end")
     return skills_result, certification_result
 
 def aboutMeFun():

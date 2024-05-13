@@ -1,9 +1,14 @@
 import json
 
-def load_Project_JSON():
+def load_Project_JSON(version = ""):
     #---- loads all the information stored in the json in the proper format to show all the projects ----
-    with open("./information/Projects.json") as Projects:
-        LoadProjects = json.load(Projects)
+    if version == "site":
+        with open("./information/site-template.json") as siteTemplate:
+            LoadProjects = json.load(siteTemplate)
+    else:
+        with open("./information/Projects.json") as Projects:
+            LoadProjects = json.load(Projects)
+
     return LoadProjects
 
 def search(SearchBox):
@@ -21,56 +26,57 @@ def search(SearchBox):
             continue
     return queredList
 
+def makeprettytags(Project):
+    siteTemplate = load_Project_JSON("site")
+    tagstyle = siteTemplate.get("Tag")
+    tagStylestart = siteTemplate.get("Tag start")
+    tagStyleend = siteTemplate.get("Tag end")
+    taglist = Project.get("tag")
+    result = tagStylestart
+    for x in taglist:
+        result = result + tagstyle.replace("%name", x)
+    result = result + tagStyleend
+    return result
 
 def makeitpretty(searchList):
+    siteTemplate = load_Project_JSON("site")
     result = ""
     if len(searchList) %3 == 0:
         number_of_div = len(searchList) // 3 
         print("equal to 3 ")
     else:
-        number_of_div = int(len(searchList) // 3)
+        number_of_div = len(searchList) // 3
     split_searchList = [searchList[i:i+3] for i in range(0, len(searchList), 3)]
+    
     while number_of_div > 0: 
         for x in split_searchList:
-            result = result + '''<div class="row">'''
+            
+            result = result + siteTemplate.get("Project start")
             #print("x", x)
             if len(x) == 3:
                 for y in x:
-                    result = result + ('''
-            <div class="col-md-4">
-                <div class="card">
-                    <div class="card-header">%s</div>
-                    <img src="..." class="card-img-top" alt="...">
-                
-                    <div class="card-body">
-                    <h5 class="card-title">%s</h5>
-                    <p class="card-text">%s</p>
-                    <a href="%s" class="btn btn-primary">See the Project</a>
-                    </div>
-                </div>
-            </div>''' %(y.get("Name"), y.get("Name"), y.get("information"), y.get("Link")))
-            result = result + '''</div>'''
+                    projectstyle = siteTemplate.get("Project")
+                    projectstyle = projectstyle.replace("%tag", makeprettytags(y))
+                    projectstyle = projectstyle.replace('%title', y.get("Name"))
+                    projectstyle = projectstyle.replace('%info', y.get("information"))
+                    projectstyle = projectstyle.replace('%link', y.get("Link"))
+                    result = result + projectstyle
+                split_searchList.remove(x)
+            result = result + siteTemplate.get("Project end")
         # create div 
         number_of_div -= 1
     if number_of_div == 0:
         for x in split_searchList:
             if len(x) != 3:
-                result = result + '''<div class="row">'''
+                result = result + siteTemplate.get("Project start")
                 for y in x: 
-                    result = result + ('''
-                    <div class="col-md-4">
-                        <div class="card">
-                            <div class="card-header">%s</div>
-                            <img src="..." class="card-img-top" alt="...">
-                        
-                            <div class="card-body">
-                            <h5 class="card-title">%s</h5>
-                            <p class="card-text">%s</p>
-                            <a href="%s" class="btn btn-primary">See the Project</a>
-                            </div>
-                        </div>
-                    </div>''' %(y.get("Name"), y.get("Name"), y.get("information"), y.get("Link")))
-                result = result + '''</div>'''
+                    projectstyle = siteTemplate.get("Project")
+                    projectstyle = projectstyle.replace('%tag', makeprettytags(y))
+                    projectstyle = projectstyle.replace('%title', y.get("Name"))
+                    projectstyle = projectstyle.replace('%info', y.get("information"))
+                    projectstyle = projectstyle.replace('%link', y.get("Link"))
+                    result = result + projectstyle
+                result = result + siteTemplate.get("Project end")
     return result
     
 
@@ -88,3 +94,5 @@ def getInformation_from_list(searchList):
         print(x.get("Link"))
         print(x.get("information"))
         print(x.get("tag"))
+
+

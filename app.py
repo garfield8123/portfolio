@@ -25,6 +25,15 @@ def searchedProjects():
     data_dict.update(data_dict_2)
     return template("HTML/project.tpl", data_dict)
 
+@route("/SearchProject/<query>")
+def searchqueryProject(query):
+    queried_list = search(query)
+    data_dict = aboutMeFun()
+    data_dict_2 = template_dict(queried_list)
+    data_dict.update(data_dict_2)
+    return template("HTML/project.tpl", data_dict)
+
+
 @route("/project")
 def Projects():
     data_dict = aboutMeFun()
@@ -96,4 +105,5 @@ def error500(error):
 
 #---- Top one is for heroku or cloud based hosting ----
 data = getJsonInformation()
+#application = default_app()
 run(host=data.get("Server").get("Address")[0:data.get("Server").get("Address").find(":")], port=os.environ.get('PORT', 5000), debug=True) 
