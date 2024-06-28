@@ -159,6 +159,7 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 
-information/credentials.json
-information/email_credentials.json
-information/email-info.json
+/information/credentials.json
+/information/email_credentials.json
+/information/email-info.json
+/information/token.json
