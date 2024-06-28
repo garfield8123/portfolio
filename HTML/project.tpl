@@ -28,6 +28,9 @@
                     <li class="nav-item">
                         <a class="nav-link" href="./project">Projects</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="./contact">Contact</a>
+                    </li>
                 </ul>
                 <form class="d-flex" role="search" method="POST" action="./SearchProject">
                     <input class="form-control me-2" name="SearchBox" type="search" placeholder="Search" aria-label="Search">

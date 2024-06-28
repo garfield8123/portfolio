@@ -4,12 +4,41 @@ import os
 from aboutMe import *
 from search import *
 from Captcha import *
+from credentials import *
 from googleEmail import *
+from PreviousJobs import *
+from ip_logger import *
+import requests,json
+import pandas
 
 @route('/')
 def home():
+    client_ip = request.environ.get('REMOTE_ADDR')
+    client_ip2 = request.environ.get('HTTP_X_FORWARDED_FOR')
+    print(client_ip2)
+    ip_logged(client_ip, client_ip2)
     data_dict = aboutMeFun()
+    data_dict2 = MakeJobs()
+    data_dict.update(data_dict2)
     return template("HTML/index.tpl", data_dict)
+
+@route("/gmailset")
+def setgmail():
+    auth_url = gmail_set()
+    print(auth_url)
+    return '''<meta http-equiv="refresh" content="0; URL="'''+ auth_url + '''" />''' 
+
+@route("/iplogger")
+def ipLogger():
+    get_pretty()
+    ipInfoJson, baseDirectory = IPJsonInfo()
+    csv_location = os.path.join(baseDirectory, ipInfoJson.get("IP_CSV_File"))
+    csvfile_dataframe = pandas.read_csv(csv_location)
+    return csvfile_dataframe.to_html()
+
+@route("/robots.txt")
+def robots():
+    return static_file("robots.txt", root=os.path.abspath('SEO'))
 
 @route("/about-me")
 def aboutMe():
@@ -33,6 +62,10 @@ def searchqueryProject(query):
     data_dict.update(data_dict_2)
     return template("HTML/project.tpl", data_dict)
 
+@route("/gmailapi")
+def gmailapi():
+    authurl = gmail_set()
+    return '''<meta http-equiv="refresh" content="0; URL='./'" />''' 
 
 @route("/project")
 def Projects():
@@ -41,37 +74,32 @@ def Projects():
     data_dict.update(data_dict_2)
     return template("HTML/project.tpl", data_dict)
 
-#@route("/contact")
+@route("/contact")
 def Contact():
     data_dict = aboutMeFun()
     data_dict2 = captchaDict()
     data_dict.update(data_dict2)
     return template("HTML/contact.tpl", data_dict)
 
-#@post("/contacted")
+@post("/contacted")
 def Contacted():
-    usernamebot = request.forms.get("username")
-    Captcha = request.forms.get("Captcha")
-    captchatext2 = request.forms.get("capt")
-    if usernamebot != "N0":
-        print("Bot")
+    data_dict2 = captchaDict()
+    recaptcha_response = request.forms.get('g-recaptcha-response')
+    payload = {
+        'secret': data_dict2.get("Secret"),
+        'response': recaptcha_response
+    }
+    response = requests.post('https://www.google.com/recaptcha/api/siteverify', data=payload)
+    result = response.json()
+
+    if result.get('success'):
+        email = request.forms.get("email")
+        subject = request.forms.get("subject")
+        message = request.forms.get("Message")
+        gmail_send_message(subject, message, email)
     else:
-        print("cap",Captcha)
-        print("text",captchatext2)
-        if Captcha == captchatext2:
-            client_ip = request.environ.get('REMOTE_ADDR')
-            try:
-                remove_captcha("./Images/" + client_ip.replace(".","") +'captcha.png')
-            except OSError as e:
-                print(e)
-            Subject = request.forms.get("subject")
-            Email = request.forms.get("email")
-            Message = request.forms.get("Message")
-            sendEmail(Subject+Email, Message, "orangegarfieldspam01@gmail.com")
-            print("hello",Subject)
-            print("hello2", Email)
-            print("hello3", Message)
-    return '''<meta http-equiv="refresh" content="0; URL='./'" />''' 
+        print("----- BOT ACCESSED ----")
+        return '''<meta http-equiv="refresh" content="0; URL='./'" />''' 
 
 @route('/HTML/<filename>')
 def server_HTML(filename):
@@ -91,6 +119,9 @@ def server_Scripts(filename):
 @error(404)
 def error404(error):
     print("404", error)
+    client_ip2 = request.environ.get('HTTP_X_FORWARDED_FOR')
+    blacklist(client_ip2)
+    print(client_ip2)
     return '''<meta http-equiv="refresh" content="0; URL='./'" />'''
 
 @error(303)
@@ -105,5 +136,8 @@ def error500(error):
 
 #---- Top one is for heroku or cloud based hosting ----
 data = getJsonInformation()
-#application = default_app()
-run(host=data.get("Server").get("Address")[0:data.get("Server").get("Address").find(":")], port=os.environ.get('PORT', 5000), debug=True) 
+localhost = data.get("Server").get("localhost")
+if localhost.upper() == "TRUE":
+    run(host=data.get("Server").get("Address")[0:data.get("Server").get("Address").find(":")], port=os.environ.get('PORT', 5000), debug=True) 
+else:
+    application = default_app()

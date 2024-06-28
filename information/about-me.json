@@ -7,8 +7,16 @@
         "HTML":"90", 
         "Python":"95"
     },
-    "Certifications":{
+    "Certifications None":{
         "Comptia Network+":"Date expires"
+    },
+    "Education":{
+        "CSE 151":"Advanced Computer Networks", 
+        "TIM 172": "Introduction to Management of Technology",
+        "TIM 175": "Business Strategy and Information Systems",
+        "CSE 182": "Introduction to Database Management System", 
+        "TIM 147": "Introduction to Data Mining for Business", 
+        "ECON 113": "Introduction to Econometrics"
     },
     "PositionTitle":"Information Security Analyst"
     },

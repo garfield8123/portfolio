@@ -3,32 +3,41 @@ from email.mime.multipart import MIMEMultipart
 #from AdvancedFernetDataEncryption import *
 from inspect import getcallargs
 import json, smtplib, ssl
+from credentials import *
 
-def getJsonInformation(Version = ""):
+def getAboutMe(Version = ""):
+    serverCredentials = getJsonInformation()
     if "me" in Version.lower():
-        with open("./information/about-me.json") as aboutMe:
+        with open(os.path.join(serverCredentials.get("Server Files").get("baseDirectory"), serverCredentials.get("Server Files").get("AboutMe"))) as aboutMe:
             loadedJson = json.load(aboutMe)
     elif "site" in Version.lower():
-        with open("./information/site-template.json") as siteTemplate:
+        with open(os.path.join(serverCredentials.get("Server Files").get("baseDirectory"), serverCredentials.get("Server Files").get("Site-Template"))) as siteTemplate:
             loadedJson = json.load(siteTemplate)
-    else:
-        with open("./information/credentials.json") as Credentials:
-            loadedJson = json.load(Credentials)
     return loadedJson
 
 def makeInformationPretty():
-    aboutMeJson = getJsonInformation("me")
-    siteTemplateJson = getJsonInformation("site")
+    aboutMeJson = getAboutMe("me")
+    siteTemplateJson = getAboutMe("site")
     certification_dict = aboutMeJson.get("aboutMe").get("Certifications")
     skills_dict = aboutMeJson.get("aboutMe").get("Skills")
 
-    certificateStyle = siteTemplateJson.get("Certifications")
     skillStyle = siteTemplateJson.get("Skills")
-    certification_result = siteTemplateJson.get("Certifications start")
-    for key, values in certification_dict.items():
-        certificateStyle = certificateStyle.replace("%name", key)
-        certificateStyle = certificateStyle.replace('%expire', values)
-        certification_result = certification_result + certificateStyle
+    if certification_dict is not None:
+        certification_result = siteTemplateJson.get("Certifications start").replace("%title", "Certifications")
+        for key, values in certification_dict.items():
+            certificateStyle = siteTemplateJson.get("Certifications")
+            certificateStyle = certificateStyle.replace("%name", key)
+            certificateStyle = certificateStyle.replace('%expire', values)
+            certification_result = certification_result + certificateStyle
+    else:
+        education_dict = aboutMeJson.get("aboutMe").get("Education")
+        certification_result = siteTemplateJson.get("Certifications start").replace("%title", "Education")
+        for key, values in education_dict.items():
+            certificateStyle = siteTemplateJson.get("Certifications")
+            certificateStyle = certificateStyle.replace("%name", key)
+            certificateStyle = certificateStyle.replace('%expire', values)
+            certification_result = certification_result + certificateStyle
+
 
     skills_result = siteTemplateJson.get("Skills start")
     for key, values in skills_dict.items():
@@ -41,7 +50,7 @@ def makeInformationPretty():
 
 def aboutMeFun():
     skills_result, certification_result = makeInformationPretty()
-    aboutMeInformation = getJsonInformation("me")
+    aboutMeInformation = getAboutMe("me")
     aboutMe_dict = {"firstName": aboutMeInformation.get("aboutMe").get("Name").split(" ")[0],
     "fullName": aboutMeInformation.get("aboutMe").get("Name"), 
     "majorName": aboutMeInformation.get("aboutMe").get("Major"),

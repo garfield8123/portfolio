@@ -1,0 +1,7 @@
+{
+    "api_site":"http://ip-api.com/json/", 
+    "Look up": ["regionName", "city", "country", "lat", "lon", "isp"],
+    "IP_txt_File":"ip_logs.txt",
+    "IP_CSV_File":"ip_info.csv",
+    "blacklist":"blacklist.txt"
+}

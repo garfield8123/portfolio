@@ -1,0 +1,1 @@
+https://accounts.google.com/o/oauth2/auth?response_type=code&client_id=763876490520-74mb87h2lqdkratcg520h7gks6j5a7b2.apps.googleusercontent.com&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fgmail.send&state=ChjGjbXcwRR98g2PvGM6HvMNBbtgf0&prompt=consent&access_type=offline

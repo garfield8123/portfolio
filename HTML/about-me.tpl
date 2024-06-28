@@ -9,7 +9,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
         <link rel="stylesheet" href="../Scripts/index.css">
-        <link rel="shortcut icon" href="/Images/logo-betters.png">
+        <link rel="shortcut icon" href="/Images/pandaProfile.jpg">
         
     </head>
     <header>
@@ -29,6 +29,9 @@
                     <li class="nav-item">
                         <a class="nav-link" href="./project">Projects</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="./contact">Contact</a>
+                    </li>
                 </ul>
                 <form class="d-flex" role="search" method="POST" action="./SearchProject">
                     <input class="form-control me-2" name="SearchBox" type="search" placeholder="Search" aria-label="Search">
@@ -42,18 +45,18 @@
     <div class="site-wrapper">
         <div class="inner cover">
             <h1>{{fullName}}</h1> <br>
-            <div class="row" style="width: 50%; margin: 0 auto;">
-                <div class="col-xs-4">
+            <div class="row">
+                <div class="col-xs-12" style="width: 50%; margin: 0 auto;">
                     <h3>Education</h3>
-                    <p>{{schoolName}}</p>
+                    <p><strong>{{schoolName}}</strong></p>
                     <p>{{majorName}}</p>
                 </div>
+            </div>
+            <div class="row" style="width: 50%; margin: 0 auto;">
                 <div class="col-xs-4">
-                    <h3>Certifications</h3>
                     {{!certifications}}
                 </div>
-                <div class="col-xs-4" style="width: 50%; margin: 0 auto;">
-                    <h3>Skills</h3>
+                <div class="col-xs-4">
                     {{!skills}}
                 </div>
             </div>

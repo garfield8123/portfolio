@@ -1,0 +1,28 @@
+{
+    "Jobs":[
+        {
+            "Company":"Pinpoint AVL",
+            "Position":"System Administrator",
+            "Employment_Time":"5/2022 - Current",
+            "Logo":"/Images/pinpoint.jpg"
+    },
+{
+    "Company":"Senior Computer Center",
+    "Position":"Information Technology Technician",
+    "Employment_Time":"4/2023 - 6/2024",
+    "Logo":"/Images/seniorComputerCenter.png"
+}, 
+{
+    "Company":"Action Urgent Care",
+    "Position":"Lab Engineer Intern",
+    "Employment_Time":"6/2023 - 11/2023",
+    "Logo":"/Images/ActionUrgentCare.jpg"
+}, 
+{
+    "Company":"Chinese Hospital",
+    "Position":"Information Technology Technician Intern",
+    "Employment_Time":"6/2019-8/2019",
+    "Logo":"/Images/ChineseHospital.png"
+}
+    ]
+}

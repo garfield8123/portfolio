@@ -1,12 +1,14 @@
 import json
+from credentials import *
 
 def load_Project_JSON(version = ""):
+    serverCredentials = getJsonInformation()
     #---- loads all the information stored in the json in the proper format to show all the projects ----
     if version == "site":
-        with open("./information/site-template.json") as siteTemplate:
+        with open(os.path.join(serverCredentials.get("Server Files").get("baseDirectory"), serverCredentials.get("Server Files").get("Site-Template"))) as siteTemplate:
             LoadProjects = json.load(siteTemplate)
     else:
-        with open("./information/Projects.json") as Projects:
+        with open(os.path.join(serverCredentials.get("Server Files").get("baseDirectory"), serverCredentials.get("Server Files").get("Projects"))) as Projects:
             LoadProjects = json.load(Projects)
 
     return LoadProjects

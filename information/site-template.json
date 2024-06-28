@@ -1,12 +1,12 @@
 {
     "Certifications start":
-    "",
+    "<h3>%title</h3>",
     "Certifications":
-    "<p>%name</p> <p>%expire</p> <br>",
+    "<p>%name : %expire</p> <br>",
     "Certifications end":
     "",
     "Skills start":
-    "",
+    "<h3>Skills</h3>",
     "Skills":
     "<p>%name</p> <progress value=%value max='100'></progress> %value <br>",
     "Skills end":
@@ -20,7 +20,15 @@
     "Tag start": 
     "",
     "Tag":
-    "<a href='./SearchProject/%name' class='btn-link'> %name </a>",
+    "<a href='./SearchProject/%name' class='badge badge-pill badge-primary'> %name </a>",
     "Tag end":
-    "<br>"
+    "<br><br>", 
+    "Carosel Start":
+    "<div class='carousel-inner'>",
+    "Carosel First":
+    "<div class=' carousel-item active'><img class='d-block carousel-image' src='%logoSource' alt='%CompanyName'><br><div class='carousel-caption d-md-block card'><h5>%CompanyName</h5> <p>%EmploymentTitle</p> <p>%Date</p></div></div>",
+    "Carosel":
+    "<div class=' carousel-item'><img class='d-block carousel-image' src='%logoSource' alt='%CompanyName'><br><div class='carousel-caption d-md-block card'><h5>%CompanyName</h5> <p>%EmploymentTitle</p> <p>%Date</p></div></div>",
+    "Carosel End":
+    "</div>"
 }

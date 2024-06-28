@@ -2,7 +2,8 @@
 # Import the following modules
 from bottle import *
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
-import random,string,os
+import random,string,os, json
+from credentials import *
  
 def create_captcha(width, height):
     
@@ -38,9 +39,11 @@ def create_captcha(width, height):
     return captcha_text, captcha_path
 
 def captchaDict():
-    captcha_text, captcha_path = create_captcha(350,100)
-
-    return {'CaptchaPath':captcha_path, "captcha":captcha_text} 
+    #captcha_text, captcha_path = create_captcha(350,100)
+    credentials = getJsonInformation()
+    site_key = credentials.get("Captcha").get("Site_key")
+    secret_key = credentials.get("Captcha").get("Secret_key")
+    return {'site_key':site_key, "Secret":secret_key} 
 
 def remove_captcha(filename):
     os.remove(filename)
