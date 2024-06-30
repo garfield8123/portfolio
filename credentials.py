@@ -102,7 +102,7 @@ if __name__ == "__main__":
                 print("Please restart the bash console")
                 sys.exit(1)
             if len(sys.argv) > 3:
-                if len(sys.argv) >= 6:
+                if len(sys.argv) > 6:
                     crashError("google")
                 try: 
                     setCaptchaKey(sys.argv[3], sys.argv[4])
@@ -113,7 +113,7 @@ if __name__ == "__main__":
         else:
             deleteSystemVariables("SERVER_CREDENTIALS_PORTFOLIO", sys.argv[2])
             if len(sys.argv) > 3:
-                if len(sys.argv) >= 6:
+                if len(sys.argv) > 6:
                     crashError("google")
             sys.exit(1)
     else:
