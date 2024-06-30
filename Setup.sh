@@ -14,3 +14,4 @@ echo "Information Base Directory"
 read infoBaseDirectory
 
 python3 credentials.py set $credentialsLocation $googleSiteKey $googleSecretKey $infoBaseDirectory
+python3 googleEmail.py

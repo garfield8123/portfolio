@@ -96,3 +96,6 @@ def gmail_send_message(Subject, Message, Email):
     print(f"An error occurred: {error}")
     send_message = None
   return send_message
+
+if __name__ == "__main__":
+  gmail_set()
