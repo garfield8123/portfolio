@@ -81,12 +81,12 @@ if __name__ == "__main__":
     runninglocalhost = False
     if localhost.strip().lower() in ['true', 'yes']:
         runninglocalhost = True
-    setLocalhost(runninglocalhost)
     if len(sys.argv) < 4:
         crashError()
     if sys.argv[1].upper() in ["SET", "RM"]:
         if "SET" == sys.argv[1].upper():
             createSystemVariables("SERVER_CREDENTIALS_PORTFOLIO", sys.argv[2])
+            setLocalhost(runninglocalhost)
             if len(sys.argv) > 3:
                 if len(sys.argv) != 5:
                     crashError("google")
