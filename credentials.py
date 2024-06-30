@@ -29,7 +29,8 @@ def createSystemVariables(variableName, variableValue):
         # Execute the command in the shell
         subprocess.run(command, shell=True)
     else:
-        shell_profile = os.path.expanduser('~/.bashrc') if 'bash' in os.getenv('SHELL', '') else os.path.expanduser('~/.zshrc')
+        shell_profile = os.path.expanduser('~/.bashrc') 
+        #if 'bash' in os.getenv('SHELL', '') else os.path.expanduser('~/.zshrc')
         command = f'\nexport {variableName}="{variableValue}"\n'
         with open(shell_profile, 'r') as file:
             lines = [line.strip() for line in file.readlines()]
@@ -48,7 +49,8 @@ def deleteSystemVariables(variableName, variableValue):
         command = f'REG delete HKCU\\Environment /F /V {variableName}'
         subprocess.run(command, shell=True)
     else:
-        shell_profile = os.path.expanduser('~/.bashrc') if 'bash' in os.getenv('SHELL', '') else os.path.expanduser('~/.zshrc')
+        shell_profile = os.path.expanduser('~/.bashrc') 
+        #if 'bash' in os.getenv('SHELL', '') else os.path.expanduser('~/.zshrc')
         command = f'\nexport {variableName}="{variableValue}"\n'
         #shutil.copyfile(shell_profile, shell_profile + ".bak")
         result = ""
