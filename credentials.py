@@ -62,11 +62,11 @@ def deleteSystemVariables(variableName, variableValue):
         with open(shell_profile, "w") as file:   
             file.write(result)
 
-def setCaptchaKey():
+def setCaptchaKey(SiteKey, SecretKey):
     with open(os.environ["SERVER_CREDENTIALS_PORTFOLIO"], "r") as Credentials:
         loadedJson = json.load(Credentials)
-    loadedJson.get("Captcha")["Site_key"] = os.environ["GOOGLE_SITE_KEY"]
-    loadedJson.get("Captcha")["Secret_key"] = os.environ["GOOGLE_SECRET_KEY"]
+    loadedJson.get("Captcha")["Site_key"] = SiteKey
+    loadedJson.get("Captcha")["Secret_key"] = SecretKey
     with open(os.environ["SERVER_CREDENTIALS_PORTFOLIO"], "w") as file:
         json.dump(loadedJson, file, indent=4)
 
@@ -74,6 +74,13 @@ def setLocalhost(Localhost):
     with open(os.environ["SERVER_CREDENTIALS_PORTFOLIO"], "r") as Credentials:
         loadedJson = json.load(Credentials)
     loadedJson.get("Server")["localhost"] = str(Localhost)
+    with open(os.environ["SERVER_CREDENTIALS_PORTFOLIO"], "w") as file:
+        json.dump(loadedJson, file, indent=4)
+
+def setBaseDirectory(baseDirectory):
+    with open(os.environ["SERVER_CREDENTIALS_PORTFOLIO"], "r") as Credentials:
+        loadedJson = json.load(Credentials)
+    loadedJson.get("Server Files")["baseDirectory"] = baseDirectory
     with open(os.environ["SERVER_CREDENTIALS_PORTFOLIO"], "w") as file:
         json.dump(loadedJson, file, indent=4)
 
@@ -85,24 +92,29 @@ if __name__ == "__main__":
         runninglocalhost = True
     if len(sys.argv) < 4:
         crashError()
-    if sys.argv[1].upper() in ["SET", "RM"]:
+    if sys.argv[1].upper() in ["SET", "RM", "DEL"]:
         if "SET" == sys.argv[1].upper():
             createSystemVariables("SERVER_CREDENTIALS_PORTFOLIO", sys.argv[2])
             setLocalhost(runninglocalhost)
+            try: 
+                os.environ["SERVER_CREDENTIALS_PORTFOLIO"]
+            except KeyError:
+                print("Please restart the bash console")
+                sys.exit(1)
             if len(sys.argv) > 3:
-                if len(sys.argv) != 5:
+                if len(sys.argv) >= 6:
                     crashError("google")
-                createSystemVariables("GOOGLE_SITE_KEY", sys.argv[3])
-                createSystemVariables("GOOGLE_SECRET_KEY", sys.argv[4])
-                setCaptchaKey()
+                try: 
+                    setCaptchaKey(sys.argv[3], sys.argv[4])
+                    setBaseDirectory(sys.argv[5])
+                except IndexError:
+                    crashError("google")
             sys.exit(1)
         else:
             deleteSystemVariables("SERVER_CREDENTIALS_PORTFOLIO", sys.argv[2])
             if len(sys.argv) > 3:
-                if len(sys.argv) != 5:
+                if len(sys.argv) >= 6:
                     crashError("google")
-                deleteSystemVariables("GOOGLE_SITE_KEY", sys.argv[3])
-                deleteSystemVariables("GOOGLE_SECRET_KEY", sys.argv[4])
             sys.exit(1)
     else:
         crashError()
