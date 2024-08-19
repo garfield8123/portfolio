@@ -36,8 +36,8 @@ def createSystemVariables(variableName, variableValue):
             lines = [line.strip() for line in file.readlines()]
         result = True
         for x in lines:
-            print(command.strip() in x)
-            if command.strip() in x:
+            print(command.strip() == x)
+            if command.strip() == x:
                 result = False
                 exit
         if result:
@@ -56,7 +56,7 @@ def deleteSystemVariables(variableName, variableValue):
         result = ""
         with open(shell_profile, "r") as file:
             for line in file:
-                if line.strip() in command.strip():
+                if line.strip() == command.strip():
                     line = line.strip().replace(command.strip(), "")
                 result += line
         with open(shell_profile, "w") as file:   

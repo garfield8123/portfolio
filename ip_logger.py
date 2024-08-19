@@ -21,8 +21,9 @@ def ip_logged(ip_addr, ip_addr2):
             print(list_x[0])
             print(ip_addr)
             print(ip_addr not in list_x[0])
-            if ip_addr not in list_x[0] and str(ip_addr2) not in list_x[1].replace("\n", ""):
-                f.write(ip_addr + ":" + str(ip_addr2)+"\n")
+            if len(list_x) == 2: 
+                if ip_addr not in list_x[0] and str(ip_addr2) not in list_x[1].replace("\n", ""):
+                    f.write(ip_addr + ":" + str(ip_addr2)+"\n")
         f.close()
         print("here")
     else:

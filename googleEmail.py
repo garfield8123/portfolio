@@ -15,6 +15,7 @@ from email.message import EmailMessage
 SCOPES = ["https://www.googleapis.com/auth/gmail.send"]
 
 serverCredentials = getJsonInformation()
+gmail_oauth = os.path.join(serverCredentials.get("Server Files").get("baseDirectory"), serverCredentials.get("Server Files").get("Gmail_OAuthText"))
 token_File = os.path.join(serverCredentials.get("Server Files").get("baseDirectory"), serverCredentials.get("Server Files").get("GoogleToken"))
 email_credential = os.path.join(serverCredentials.get("Server Files").get("baseDirectory"), serverCredentials.get("Server Files").get("gmailCredentials"))
 email_info = os.path.join(serverCredentials.get("Server Files").get("baseDirectory"), serverCredentials.get("Server Files").get("emailInfo"))
@@ -40,7 +41,7 @@ def gmail_set():
       )
       auth_url, _ = flow.authorization_url(prompt='consent')
       print(f'Please go to this URL to authorize the application: {auth_url}')
-      gmail_oauth_file = "./information/gmail_oauth.txt"
+      gmail_oauth_file = gmail_oauth
       if os.path.isfile(gmail_oauth_file):
         with open(gmail_oauth_file, 'r') as file:
           content =file.read()
@@ -96,6 +97,10 @@ def gmail_send_message(Subject, Message, Email):
     print(f"An error occurred: {error}")
     send_message = None
   return send_message
+
+def send_email(Subject, Message, Email, AppPassword):
+  print(Subject)
+  
 
 if __name__ == "__main__":
   gmail_set()

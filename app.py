@@ -98,7 +98,10 @@ def Contacted():
         message = request.forms.get("Message")
         gmail_send_message(subject, message, email)
     else:
+        client_ip2 = request.environ.get('HTTP_X_FORWARDED_FOR')
+        blacklist(client_ip2)
         print("----- BOT ACCESSED ----")
+        print("----- Blacklist ip addr: %s -----"%(client_ip2))
         return '''<meta http-equiv="refresh" content="0; URL='./'" />''' 
 
 @route('/HTML/<filename>')
@@ -121,7 +124,7 @@ def error404(error):
     print("404", error)
     client_ip2 = request.environ.get('HTTP_X_FORWARDED_FOR')
     blacklist(client_ip2)
-    print(client_ip2)
+    print("----- Blacklist ip addr: %s -----"%(client_ip2))
     return '''<meta http-equiv="refresh" content="0; URL='./'" />'''
 
 @error(303)

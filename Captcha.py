@@ -33,7 +33,7 @@ def create_captcha(width, height):
     
     image = image.filter(ImageFilter.GaussianBlur(radius=1))
     #image.show()
-    client_ip = request.environ.get('REMOTE_ADDR')
+    client_ip = request.environ.get('HTTP_X_FORWARDED_FOR')
     captcha_path = "./Images/" + client_ip.replace(".","") +'captcha.png'
     image.save("./Images/" + client_ip.replace(".","") +'captcha.png')
     return captcha_text, captcha_path
