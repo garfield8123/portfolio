@@ -15,10 +15,10 @@ from email.message import EmailMessage
 SCOPES = ["https://www.googleapis.com/auth/gmail.send"]
 
 serverCredentials = getJsonInformation()
-gmail_oauth = os.path.join(serverCredentials.get("Server Files").get("baseDirectory"), serverCredentials.get("Server Files").get("Gmail_OAuthText"))
-token_File = os.path.join(serverCredentials.get("Server Files").get("baseDirectory"), serverCredentials.get("Server Files").get("GoogleToken"))
-email_credential = os.path.join(serverCredentials.get("Server Files").get("baseDirectory"), serverCredentials.get("Server Files").get("gmailCredentials"))
-email_info = os.path.join(serverCredentials.get("Server Files").get("baseDirectory"), serverCredentials.get("Server Files").get("emailInfo"))
+gmail_oauth = os.getenv("GMAIL_Credential_Location")
+token_File = os.getenv("Gmail_Token_Location")
+email_credential = os.getenv("GMAIL_Credential_Location")
+email_info = os.getenv("email_Location")
 
 def gmail_set():
   """Shows basic usage of the Gmail API.

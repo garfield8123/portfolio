@@ -41,8 +41,8 @@ def create_captcha(width, height):
 def captchaDict():
     #captcha_text, captcha_path = create_captcha(350,100)
     credentials = getJsonInformation()
-    site_key = credentials.get("Captcha").get("Site_key")
-    secret_key = credentials.get("Captcha").get("Secret_key")
+    site_key = os.getenv("Site_key")
+    secret_key = os.getenv("Secret_key")
     return {'site_key':site_key, "Secret":secret_key} 
 
 def remove_captcha(filename):
