@@ -5,7 +5,7 @@ from aboutMe import *
 from search import *
 from Captcha import *
 from credentials import *
-from googleEmail import *
+#from googleEmail import *
 from PreviousJobs import *
 from ip_logger import *
 import requests,json
@@ -24,8 +24,8 @@ def home():
 
 @route("/gmailset")
 def setgmail():
-    auth_url = gmail_set()
-    print(auth_url)
+    auth_url = "./"
+    #print(auth_url)
     return '''<meta http-equiv="refresh" content="0; URL="'''+ auth_url + '''" />''' 
 
 @route("/iplogger")
@@ -64,7 +64,7 @@ def searchqueryProject(query):
 
 @route("/gmailapi")
 def gmailapi():
-    authurl = gmail_set()
+    #authurl = gmail_set()
     return '''<meta http-equiv="refresh" content="0; URL='./'" />''' 
 
 @route("/project")
@@ -140,7 +140,4 @@ def error500(error):
 #---- Top one is for heroku or cloud based hosting ----
 data = getJsonInformation()
 localhost = data.get("Server").get("localhost")
-if localhost.upper() == "TRUE":
-    run(host=data.get("Server").get("Address")[0:data.get("Server").get("Address").find(":")], port=os.environ.get('PORT', 5000), debug=True) 
-else:
-    application = default_app()
+run(host=data.get("Server").get("Address")[0:data.get("Server").get("Address").find(":")], port=os.environ.get('PORT', 5000), debug=True) 
