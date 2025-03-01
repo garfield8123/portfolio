@@ -1,12 +1,14 @@
 from bottle import *
 from werkzeug.utils import secure_filename
+from datetime import datetime, timedelta
 import os
 from aboutMe import *
 from search import *
 from Captcha import *
 from credentials import *
-#from googleEmail import *
+from googleEmail import *
 from PreviousJobs import *
+from limitedshell import generatePasswordshtml
 from ip_logger import *
 import requests,json
 import pandas
@@ -20,7 +22,14 @@ def home():
     data_dict = aboutMeFun()
     data_dict2 = MakeJobs()
     data_dict.update(data_dict2)
+    #if request.get_cookie("SessionID") is not None:
+    #    os.remove(captchavalues.get(sessionID+"path"))
     return template("HTML/index.tpl", data_dict)
+
+@route("/sshpassword")
+def sshgenpassword():
+    generatePasswordshtml()
+    return '''<meta http-equiv="refresh" content="0; URL='./'" />''' 
 
 @route("/gmailset")
 def setgmail():
@@ -34,6 +43,8 @@ def ipLogger():
     ipInfoJson, baseDirectory = IPJsonInfo()
     csv_location = os.path.join(baseDirectory, ipInfoJson.get("IP_CSV_File"))
     csvfile_dataframe = pandas.read_csv(csv_location)
+    print("html")
+    print(csvfile_dataframe.to_html())
     return csvfile_dataframe.to_html()
 
 @route("/robots.txt")
@@ -77,32 +88,46 @@ def Projects():
 @route("/contact")
 def Contact():
     data_dict = aboutMeFun()
-    data_dict2 = captchaDict()
+    gcpatcha = data.get("Server").get("googlecaptcha")
+    if gcpatcha == "True":
+        data_dict2 = googlecaptcha()
+    else:
+        sessionToken, data_dict2 = normalcaptcha()
+        response.set_cookie("SessionID", sessionToken, expires=time.mktime((datetime.now() + timedelta(hours=1)).timetuple()))
     data_dict.update(data_dict2)
     return template("HTML/contact.tpl", data_dict)
 
 @post("/contacted")
 def Contacted():
-    data_dict2 = captchaDict()
-    recaptcha_response = request.forms.get('g-recaptcha-response')
-    payload = {
-        'secret': data_dict2.get("Secret"),
-        'response': recaptcha_response
-    }
-    response = requests.post('https://www.google.com/recaptcha/api/siteverify', data=payload)
-    result = response.json()
+    gcpatcha = data.get("Server").get("googlecaptcha")
+    if gcpatcha == "True":
+        recaptcha_response = request.forms.get('g-recaptcha-response')
+        result = getgooglecaptcharesults(recaptcha_response)
+    else:
+        recaptcha_response = request.forms.get('gcaptcha')
+        result = checkcaptcha(recaptcha_response, request.get_cookie("SessionID"))
+    # {'success': False, 'error-codes': ['invalid-input-response']}
 
     if result.get('success'):
         email = request.forms.get("email")
         subject = request.forms.get("subject")
         message = request.forms.get("Message")
-        gmail_send_message(subject, message, email)
+        gmail = data.get("Server").get("gmail")
+        if gmail == "True":
+            gmail_send_message(subject, message, email)
+        else:
+            send_email(subject, message, email)
+        return '''<meta http-equiv="refresh" content="0; URL='./project'" />''' 
     else:
         client_ip2 = request.environ.get('HTTP_X_FORWARDED_FOR')
         blacklist(client_ip2)
         print("----- BOT ACCESSED ----")
         print("----- Blacklist ip addr: %s -----"%(client_ip2))
-        return '''<meta http-equiv="refresh" content="0; URL='./'" />''' 
+        return '''<meta http-equiv="refresh" content="0; URL='./contact'" />''' 
+
+@route("/information/<filename>")
+def informationfile(filename):
+    return static_file(filename, root=os.path.abspath('information'))
 
 @route('/HTML/<filename>')
 def server_HTML(filename):

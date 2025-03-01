@@ -1,42 +1,29 @@
 
 # Import the following modules
 from bottle import *
-from PIL import Image, ImageDraw, ImageFont, ImageFilter
-import random,string,os, json
+from captcha.image import ImageCaptcha
+import random,string,os, json, requests
 from credentials import *
+from AdvancedFernetDataEncryption import generateSessionToken
  
 def create_captcha(width, height):
     
     captcha_text = ''.join(random.choice(string.digits) for _ in range(random.randint(4,8)))
-    image = Image.new('RGB', (width, height), color=(255, 255, 255))
-    font = ImageFont.load_default()
-
-    draw = ImageDraw.Draw(image)
+    image = ImageCaptcha(width, height)
+    # generate the image of the given text
+    data = image.generate(captcha_text)  
     
-    # Apply random rotation to each character
-    for i, char in enumerate(captcha_text):
-        char_image = Image.new('RGBA', (50, 50), (255, 255, 255, 0))
-        char_draw = ImageDraw.Draw(char_image)
-        char_draw.text((10, 10), char, (0, 0, 0), font=font)
-        char_image = char_image.rotate(random.randint(-30, 30), expand=1)
-        
-        # Apply random distortion
-        distorted_image = Image.new('RGBA', char_image.size)
-        for x in range(char_image.width):
-            for y in range(char_image.height):
-                src_x = int(x + random.choice([-2, -1, 1, 2]))
-                src_y = int(y + random.choice([-2, -1, 1, 2]))
-                if 0 <= src_x < char_image.width and 0 <= src_y < char_image.height:
-                    distorted_image.putpixel((x, y), char_image.getpixel((src_x, src_y)))
-        
-        image.paste(distorted_image, (i * 40 + 10, 10), distorted_image)
+    # write the image on the given file and save it
+    word = randomword(15)
+    captcha_path = "./Images/" + word +'captcha.png'
+    image.write(captcha_text, "./Images/" + word +'captcha.png')
     
-    image = image.filter(ImageFilter.GaussianBlur(radius=1))
-    #image.show()
-    client_ip = request.environ.get('HTTP_X_FORWARDED_FOR')
-    captcha_path = "./Images/" + client_ip.replace(".","") +'captcha.png'
-    image.save("./Images/" + client_ip.replace(".","") +'captcha.png')
+    #image.save("./Images/" + word +'captcha.png')
     return captcha_text, captcha_path
+
+def randomword(length):
+   letters = string.ascii_lowercase
+   return ''.join(random.choice(letters) for i in range(length))
 
 def captchaDict():
     #captcha_text, captcha_path = create_captcha(350,100)
@@ -48,3 +35,33 @@ def captchaDict():
 def remove_captcha(filename):
     os.remove(filename)
 
+def googlecaptcha():
+    captchacreds = captchaDict()
+    #print(captchacreds.get("site_key"))
+    return {"captchaHead":'<script src="https://www.google.com/recaptcha/enterprise.js?render='+captchacreds.get("site_key")+'"></script>',"captcha":'<div class="row"><div class="col-md-12"><div class="g-recaptcha" style="margin:0 auto; width:304px; height : 78px" data-sitekey="' + captchacreds.get("site_key") +'"></div></div></div>'}
+
+def getgooglecaptcharesults(recaptcha_response):
+    data_dict2 = captchaDict()
+    payload = {
+        'secret': data_dict2.get("Secret"),
+        'response': recaptcha_response
+    }
+    response = requests.post('https://www.google.com/recaptcha/api/siteverify', data=payload)
+    result = response.json()
+    return result
+
+captchavalues = {}
+def normalcaptcha():
+    captchatext, captchapath = create_captcha(200, 50)
+    sessionToken = randomword(20)
+    captchavalues.update({sessionToken: captchatext, sessionToken+"path":captchapath})
+    client_ip = request.environ.get('HTTP_X_FORWARDED_FOR')
+    return sessionToken, {"captchaHead":'',"captcha":'<div class="row"> <div class="col-md-12"> <img src="' + captchapath + '"> <input type="text" id="gcaptcha" name="gcaptcha" placeholder="captcha" required></div></div>'}
+
+def checkcaptcha(gcaptcha, sessionID):
+    if gcaptcha == captchavalues.get(sessionID):
+        os.remove(captchavalues.get(sessionID+"path"))
+        return {'success': True, 'error-codes': ['invalid-input-response']}
+    else:
+        os.remove(captchavalues.get(sessionID+"path"))
+        return {'success': False, 'error-codes': ['invalid-input-response']}

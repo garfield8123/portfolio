@@ -60,12 +60,13 @@ def dataDecryption(EncryptedText):
     return str(decryption(str.encode(textToken), str.encode(Textkey))).replace(RandomKey +":" + RandomToken, "").replace(str(decryption(str.encode(RandomtextToken), str.encode(RandomtextKey))), "")
 
 def CleanToken(TokenString, timestamp):
+    cleanTokenstr = ""
     for x in timestamp +"%:dHMS":
         if x+"/" in TokenString:
-            cleanToken = TokenString[TokenString.index(x+"/") +2: len(TokenString)]
+            cleanTokenstr = TokenString[TokenString.index(x+"/") +2: len(TokenString)]
             if TokenString.index(x+"/") < 30:
                 break
-    return cleanToken
+    return cleanTokenstr
 
 def decryption(token, key):
     #---- Will decrypt the encrypted text with a token and key ----

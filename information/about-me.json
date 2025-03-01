@@ -7,7 +7,10 @@
         "HTML":"90", 
         "Python":"95"
     },
-    
+    "Certifications":{
+        "CompTIA Network+":"Exp: 11/2027 <div data-iframe-width='150' data-iframe-height='270' data-share-badge-id='2f5082cd-d899-4431-9422-cbd8aa81bf01' data-share-badge-host='https://www.credly.com'></div><script type='text/javascript' async src='//cdn.credly.com/assets/utilities/embed.js'></script>"
+
+    },
     "Education":{
         "CSE 151":"Advanced Computer Networks", 
         "TIM 172": "Introduction to Management of Technology",
@@ -19,7 +22,7 @@
     "PositionTitle":"Information Security Analyst"
     },
 "ContactInfo":{
-    "email":"orangegarfieldspam01@gmail.com",
+    "email":"inquiry@garfield8123.com",
     "Github":"https://github.com/garfield8123"
     }
 }

@@ -3,6 +3,12 @@ import google.auth
 import base64
 import os
 
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+from email.message import EmailMessage
+import json, smtplib, ssl
+
+from AdvancedFernetDataEncryption import *
 from credentials import *
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
@@ -98,9 +104,45 @@ def gmail_send_message(Subject, Message, Email):
     send_message = None
   return send_message
 
-def send_email(Subject, Message, Email, AppPassword):
+def send_email(Subject, Message, Email):
+  server = smtplib.SMTP("smtp.gmail.com", 587 )  ## This will start our email server
+  server.starttls(context=ssl.create_default_context())         ## Starting the server
+  #---- Gets the credentials for the gmail login ----
+  garfieldemail, password = email_credentials()
+  server.login(garfieldemail, password)
+  mimeMessage = MIMEMultipart()
+  #---- Send a message witha certain subject ----
+  mimeMessage['to'] = garfieldemail
+  mimeMessage['subject'] = Subject + "From " + Email
+  mimeMessage.attach(MIMEText(Message, 'plain'))
+  server.sendmail(garfieldemail, garfieldemail, mimeMessage.as_string())
+  server.quit()
   print(Subject)
+
+def getemailcreds():
+  with open(os.path.join(serverCredentials.get("Server Files").get("baseDirectory"), serverCredentials.get("Server Files").get("emailInfo"))) as emailInfo:
+    loadedJson = json.load(emailInfo)
+  return loadedJson
+
+def email_credentials():
+  emailjson = getemailcreds()
+  data = getJsonInformation()
+  encryption = data.get("Server").get("encryption")
+  if encryption == "True":
+    return dataDecryption(emailjson.get("email")), dataDecryption(emailjson.get("password"))
+  else:
+    return os.environ.get("EMAIL"), os.environ.get("EMAILPASSWORD")
+
+def updateemailcreds(email, password):
+  emailjson = getemailcreds()
+  encryptedEmail = dataEncryption(email, 10, 20)
+  encryptedPassword = dataEncryption(password, 10, 20)
+  emailjson.update({"email":encryptedEmail, "password":encryptedPassword})
+  with open(os.path.join(serverCredentials.get("Server Files").get("baseDirectory"), serverCredentials.get("Server Files").get("emailInfo")), "w") as emailInfo:
+    loadedJson = json.dump(emailjson, emailInfo, indent=4)
+  return "'"
   
 
 if __name__ == "__main__":
-  gmail_set()
+  #gmail_set()
+  send_email("testsubject", "test", "orangegarfieldspam01@gmail.com")

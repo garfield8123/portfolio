@@ -1,8 +1,10 @@
 bottle
-pillow
+captcha
 cryptography
 Werkzeug
 google-api-python-client
 google-auth-httplib2
 google-auth-oauthlib
 pandas
+requests
+python-dotenv
